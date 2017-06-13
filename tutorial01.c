@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
   av_register_all();
   
   // Open video file
+  // 这个函数只是检测了文件的头部，所以接着我们需要检查在文件中的流的信息
   if(avformat_open_input(&pFormatCtx, argv[1], NULL, NULL)!=0)
     return -1; // Couldn't open file
   
@@ -79,6 +80,7 @@ int main(int argc, char *argv[]) {
   av_dump_format(pFormatCtx, 0, argv[1], 0);
   
   // Find the first video stream
+  // 找到一个视频流
   videoStream=-1;
   for(i=0; i<pFormatCtx->nb_streams; i++)
     if(pFormatCtx->streams[i]->codec->codec_type==AVMEDIA_TYPE_VIDEO) {
@@ -92,12 +94,15 @@ int main(int argc, char *argv[]) {
   pCodecCtx=pFormatCtx->streams[videoStream]->codec;
   
   // Find the decoder for the video stream
+  //流中所使用的关于编解码器的所有信息。
+  //现在我们有了一个指向他的指针，但是我们必需要找到真正的编解码器并且打开它
   pCodec=avcodec_find_decoder(pCodecCtx->codec_id);
   if(pCodec==NULL) {
     fprintf(stderr, "Unsupported codec!\n");
     return -1; // Codec not found
   }
   // Open codec
+  // 打开真正的编解码器
   if(avcodec_open2(pCodecCtx, pCodec, &optionsDict)<0)
     return -1; // Could not open codec
   
@@ -136,6 +141,7 @@ int main(int argc, char *argv[]) {
 		 pCodecCtx->width, pCodecCtx->height);
   
   // Read frames and save first five frames to disk
+  // 通过读取包来读取整个视频流，然后把它解码成帧，最好后转换格式并且保存
   i=0;
   while(av_read_frame(pFormatCtx, &packet)>=0) {
     // Is this a packet from the video stream?
@@ -159,6 +165,7 @@ int main(int argc, char *argv[]) {
         );
 	
 	// Save the frame to disk
+  // 生成一个简单的 PPM 格式文件。我们一次向文件写入一行数据
 	if(++i<=5)
 	  SaveFrame(pFrameRGB, pCodecCtx->width, pCodecCtx->height, 
 		    i);
