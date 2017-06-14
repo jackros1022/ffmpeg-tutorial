@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
   // Register all formats and codecs
   av_register_all();
   
+  // 初始化SDL
   if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
     fprintf(stderr, "Could not initialize SDL - %s\n", SDL_GetError());
     exit(1);
@@ -102,6 +103,7 @@ int main(int argc, char *argv[]) {
 #else
         screen = SDL_SetVideoMode(pCodecCtx->width, pCodecCtx->height, 24, 0);
 #endif
+
   if(!screen) {
     fprintf(stderr, "SDL: could not set video mode - exiting\n");
     exit(1);

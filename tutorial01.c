@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
   if(videoStream==-1)
     return -1; // Didn't find a video stream
   
-  // Get a pointer to the codec context for the video stream
+  // Get a pointer to 【the codec context】 for the video stream
   pCodecCtx=pFormatCtx->streams[videoStream]->codec;
   
   // Find the decoder for the video stream
@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
 			      pCodecCtx->height);
   buffer=(uint8_t *)av_malloc(numBytes*sizeof(uint8_t));
 
+  // 什么变量？？？
   sws_ctx =
     sws_getContext
     (
@@ -167,8 +168,7 @@ int main(int argc, char *argv[]) {
 	// Save the frame to disk
   // 生成一个简单的 PPM 格式文件。我们一次向文件写入一行数据
 	if(++i<=5)
-	  SaveFrame(pFrameRGB, pCodecCtx->width, pCodecCtx->height, 
-		    i);
+	  SaveFrame(pFrameRGB, pCodecCtx->width, pCodecCtx->height, i);
       }
     }
     
