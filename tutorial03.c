@@ -49,6 +49,7 @@ void packet_queue_init(PacketQueue *q) {
   q->mutex = SDL_CreateMutex();
   q->cond = SDL_CreateCond();
 }
+// 给队列填入东西
 int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
 
   AVPacketList *pkt1;
@@ -76,6 +77,7 @@ int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
   SDL_UnlockMutex(q->mutex);
   return 0;
 }
+
 static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block)
 {
   AVPacketList *pkt1;
